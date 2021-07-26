@@ -1,21 +1,10 @@
-import time
 import argparse
 from pathlib import Path
-import functools
-
-import numpy as np
-import pandas as pd
-import matplotlib
-matplotlib.use('Agg')
-import matplotlib.pyplot as plt
-from PIL import Image
 
 import torch
-import torch.nn as nn
-import torch.optim as optim
 import torchvision
 import torchvision.transforms.functional as F
-from torchsummary import summary
+from torchinfo import summary
 
 from omegaconf import OmegaConf, DictConfig
 

@@ -1,8 +1,8 @@
 defaults:
-  - model: cai
+  - model: se-itm-net
   - dataset: cai_mef
-  - optimizer: sgd
-  - lr_scheduler: step
+  - optimizer: adam
+  - lr_scheduler: multi_step
 seed: null
 epoch: 100
 loader: 
