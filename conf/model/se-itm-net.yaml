@@ -1,0 +1,18 @@
+model:
+  name: se-itm-net 
+  param:
+    activation: relu
+    up_layer:
+      name: conv_transpose2d
+      param:
+        order: 0
+        hold_mode: hold_last
+        bias_mode: bias_first
+        padding_mode: zeros
+    down_layer:
+      name: conv2d
+      param:
+        order: 0
+        hold_mode: hold_first
+        bias_mode: bias_first
+        padding_mode: zeros

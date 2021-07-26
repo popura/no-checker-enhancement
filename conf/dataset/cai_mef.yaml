@@ -1,0 +1,22 @@
+dataset:
+  name: cai_mef
+  path: ./data/
+  download: false
+  transforms:
+    paired_random_horizontal_flip:
+      param:
+        p: 0.5
+    paired_random_resized_crop:
+      param:
+        size:
+          - 129
+          - 129
+        scale:
+          - 0.6
+          - 1.0
+        ratio:
+          - 0.75
+          - 1.33
+        interpolation: Image.BICUBIC
+  pre_load: false
+    

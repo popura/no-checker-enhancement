@@ -1,0 +1,12 @@
+defaults:
+  - model: cai
+  - dataset: cai_mef
+  - optimizer: sgd
+  - lr_scheduler: step
+seed: null
+epoch: 100
+loader: 
+  batch_size: 80
+  num_workers: 0
+test:
+  result_path: ./result/
