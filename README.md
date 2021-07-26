@@ -1,4 +1,4 @@
-# iTMNet
+# Checkerboard-Artifact-Free Image-Enhancement
 This is an implementation for *Checkerboard-Artifact-Free Image-Enhancement Network Considering Local and Global Features*.
 
 When you use this implementation for your research work,
