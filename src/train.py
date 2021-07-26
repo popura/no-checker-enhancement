@@ -4,18 +4,18 @@ from typing import Optional
 import torch
 import torch.nn as nn
 import torch.optim as optim
+import torchvision
 from torchinfo import summary
 
 from omegaconf import OmegaConf, DictConfig
 import hydra
 
-import deepy.data.transform
-import deepy.data.vision.transform
+import deepy
+from deepy.data.vision import CaiMEImageDetaset
 from deepy.train.trainer import RegressorTrainer
 from deepy.train.extension import (
     IntervalTrigger,
     MinValueTrigger,
-    MaxValueTrigger,
     ModelSaver,
     HistorySaver
 )

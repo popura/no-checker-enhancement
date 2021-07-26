@@ -7,14 +7,14 @@ from PIL import Image
 import torch
 import torchvision
 import torchvision.transforms.functional as F
-from torchsummary import summary
-
-import torchdataset
-from torchtrain.trainer import AverageMeter
+from torchinfo import summary
 
 import kornia.losses
 
 from omegaconf import OmegaConf, DictConfig
+
+import deepy
+from deepy.data.vision import CaiMEImageDetaset
 
 import util as myutil
 import transform as mytransforms
@@ -51,8 +51,10 @@ def predict(path, dataset, net, device):
     #p.mkdir(parents=True, exist_ok=True)
     (p / 'imgs').mkdir(parents=True, exist_ok=True)
 
-    transforms = torchdataset.transform.Compose([mytransforms.ResizeToMultiple(divisor=16, interpolation=Image.BICUBIC),
-                                                 torchvision.transforms.ToTensor()])
+    transforms = deepy.data.transform.Compose([
+        deepy.data.vision.transform.ResizeToMultiple(divisor=16, interpolation=Image.BICUBIC),
+        torchvision.transforms.ToTensor()
+    ])
     to_pil = torchvision.transforms.ToPILImage()
     to_tensor = torchvision.transforms.ToTensor()
 
@@ -109,6 +111,7 @@ def main(cfg: DictConfig, train_id: str) -> None:
 
     result_dir = p / 'result' / train_id
     predict(str(result_dir), loader.dataset, net, device)
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()

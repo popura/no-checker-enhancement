@@ -17,19 +17,9 @@ import torchvision
 import torchvision.transforms.functional as F
 from torchsummary import summary
 
-import torchdataset
-from torchtrain.trainer import AverageMeter
-
-import kornia.losses
-
 from omegaconf import OmegaConf, DictConfig
 
-import model as mymodel
-import dataset as mydataset
 import util as myutil
-import functional as myF
-import layer as mylayer
-import transform as mytransforms
 
 
 def predict(data_dir, result_dir, net, device):
@@ -69,49 +59,7 @@ def main(cfg: DictConfig, train_id: str, input_dir: str, output_dir: str) -> Non
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-    if cfg.model.param.activation == 'relu':
-        activation = nn.ReLU
-    elif cfg.model.param.activation == 'sin':
-        activation = myF.Sin
-    else:
-        raise NotImplementedError
-
-    cfg_down_layer = cfg.model.param.down_layer
-    cfg_up_layer = cfg.model.param.up_layer
-    if cfg_down_layer.name == "conv2d":
-        down_conv_layer = nn.Conv2d
-    elif cfg_down_layer.name == "down_sampling2d":
-        down_conv_layer = functools.partial(mylayer.DownSampling2d, **cfg_down_layer.param)
-    elif cfg_down_layer.name == "kernel_conv2d":
-        down_conv_layer = functools.partial(mylayer.KernelConv2d, order=cfg_down_layer.param.order)
-    if cfg.model.param.up_layer.name == "conv_transpose2d":
-        up_conv_layer = nn.ConvTranspose2d
-    elif cfg.model.param.up_layer.name == "up_sampling2d":
-        up_conv_layer = functools.partial(mylayer.UpSampling2d, **cfg_up_layer.param)
-
-    if cfg.model.name == 'unet':
-        net = mymodel.UNet(n_channels=3, n_classes=3,
-                           up_conv_layer=up_conv_layer,
-                           down_conv_layer=down_conv_layer,
-                           activation=activation)
-    elif cfg.model.name == 'itm-net':
-        net = mymodel.ITMNet(n_channels=3, n_classes=3,
-                             up_conv_layer=up_conv_layer,
-                             down_conv_layer=down_conv_layer,
-                             activation=activation)
-    elif cfg.model.name == 'seunet':
-        net = mymodel.SEUNet(n_channels=3, n_classes=3,
-                             up_conv_layer=up_conv_layer,
-                             down_conv_layer=down_conv_layer,
-                             activation=activation)
-    elif cfg.model.name == 'se-itm-net':
-        net = mymodel.SEITMNet(n_channels=3, n_classes=3,
-                               up_conv_layer=up_conv_layer,
-                               down_conv_layer=down_conv_layer,
-                               activation=activation)
-    else:
-        raise NotImplementedError
-
+    net = myutil.get_model(cfg)
     net.load_state_dict(torch.load(str(p / 'history' / train_id / 'trained_model.pth'),
                                    map_location=device))
     net.eval()
@@ -121,6 +69,7 @@ def main(cfg: DictConfig, train_id: str, input_dir: str, output_dir: str) -> Non
     data_dir = p / input_dir
     result_dir = p / output_dir / train_id
     predict(str(data_dir), str(result_dir), net, device)
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
