@@ -1,6 +1,8 @@
 from pathlib import Path
 from typing import Optional
 
+from PIL import Image
+
 import torch
 import torch.nn as nn
 import torch.optim as optim
@@ -11,7 +13,7 @@ from omegaconf import OmegaConf, DictConfig
 import hydra
 
 import deepy
-from deepy.data.vision import CaiMEImageDetaset
+from deepy.data.vision import CaiMEImageDataset
 from deepy.train.trainer import RegressorTrainer
 from deepy.train.extension import (
     IntervalTrigger,

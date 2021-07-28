@@ -2,7 +2,7 @@ import functools
 
 import numpy as np
 
-from omegaconf import DictConfig
+from omegaconf import OmegaConf, DictConfig
 
 import torch
 import torch.nn as nn
@@ -13,7 +13,7 @@ from deepy.nn.model import UNet, SEUNet, ITMNet, SEITMNet
 
 def print_config(cfg: DictConfig) -> None:
     print('-----Parameters-----')
-    print(cfg.pretty())
+    print(OmegaConf.to_yaml(cfg))
     print('--------------------')
 
 
@@ -29,12 +29,6 @@ def is_same_config(cfg1: DictConfig, cfg2: DictConfig) -> bool:
 
     """
     return cfg1 == cfg2
-
-
-def print_config(cfg: DictConfig) -> None:
-    print('-----Parameters-----')
-    print(cfg.pretty())
-    print('--------------------')
 
 
 def set_random_seed(seed: int) -> None:
