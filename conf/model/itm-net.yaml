@@ -1,6 +1,8 @@
-# @package _group_
 name: itm-net
 param:
+  base_channels: 32
+  depth: 4
+  max_channels: 512
   activation: relu
   up_layer:
     name: conv_transpose2d

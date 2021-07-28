@@ -6,7 +6,7 @@ defaults:
 seed: null
 epoch: 100
 loader: 
-  batch_size: 80
+  batch_size: 16
   num_workers: 0
 test:
   result_path: ./result/
