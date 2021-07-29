@@ -8,8 +8,8 @@ transforms:
   paired_random_resized_crop:
     param:
       size:
-        - 129
-        - 129
+        - 256
+        - 256
       scale:
         - 0.6
         - 1.0
