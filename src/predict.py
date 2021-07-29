@@ -15,9 +15,8 @@ def predict(data_dir, result_dir, net, device):
     p = Path(result_dir)
     p.mkdir(parents=True, exist_ok=True)
     dataset = torchvision.datasets.ImageFolder(str(data_dir))
-    #transforms = torchdataset.transform.Compose([mytransforms.ResizeToMultiple(divisor=16, interpolation=Image.BICUBIC),
-    #                                             torchvision.transforms.ToTensor()])
-    transforms = torchvision.transforms.ToTensor()
+    transforms = torchdataset.transform.Compose([deepy.data.vision.transform.ResizeToMultiple(divisor=16, interpolation=Image.BICUBIC),
+                                                 torchvision.transforms.ToTensor()])
     to_pil = torchvision.transforms.ToPILImage()
     to_tensor = torchvision.transforms.ToTensor()
 
@@ -36,8 +35,8 @@ def predict(data_dir, result_dir, net, device):
             height = target.height
             width = target.width
             sample = to_pil(sample.to('cpu').clone().detach().squeeze(0))
-            #sample = F.resize(sample, (height, width), Image.BICUBIC)
-            #predict = F.resize(predict, (height, width), Image.BICUBIC)
+            sample = F.resize(sample, (height, width), Image.BICUBIC)
+            predict = F.resize(predict, (height, width), Image.BICUBIC)
 
             predict.save(str(p / ('{:04d}'.format(i) + '_' + q.stem + '_prediction.tiff')), compression=None)
 
@@ -53,7 +52,7 @@ def main(cfg: DictConfig, train_id: str, input_dir: str, output_dir: str) -> Non
                                    map_location=device))
     net.eval()
     net.to(device)
-    summary(net, (3, 256, 256))
+    summary(net, (1, 3, 256, 256))
 
     data_dir = p / input_dir
     result_dir = p / output_dir / train_id

@@ -1,0 +1,3 @@
+- model=seunet
+- loader.batch_size=64
+- loader.num_workers=10

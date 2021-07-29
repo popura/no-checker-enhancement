@@ -76,12 +76,14 @@ def get_data_loaders(cfg: DictConfig):
     
     valset = CaiMEImageDataset(
         root=str(p),
-        train=True,
+        train=False,
         transforms=deepy.data.transform.PairedCompose([
             deepy.data.transform.ToPairedTransform(
-                torchvision.transforms.ToTensor()),
+                torchvision.transforms.Resize(1080)),
             deepy.data.transform.ToPairedTransform(
-                torchvision.transforms.Resize(1080))
+                deepy.data.vision.transform.ResizeToMultiple(2**cfg.model.param.depth)),
+            deepy.data.transform.ToPairedTransform(
+                torchvision.transforms.ToTensor())
         ]),
         pre_load=cfg.dataset.pre_load,
         download=cfg.dataset.download
@@ -95,7 +97,7 @@ def get_data_loaders(cfg: DictConfig):
 
     valloader = torch.utils.data.DataLoader(
         valset,
-        batch_size=cfg.loader.batch_size,
+        batch_size=1,
         shuffle=False,
         num_workers=cfg.loader.num_workers)
     

@@ -28,9 +28,11 @@ def get_data_loader(cfg: DictConfig):
         train=False,
         transforms=deepy.data.transform.PairedCompose([
             deepy.data.transform.ToPairedTransform(
-                torchvision.transforms.ToTensor()),
+                torchvision.transforms.Resize(1080)),
             deepy.data.transform.ToPairedTransform(
-                torchvision.transforms.Resize(1080))
+                deepy.data.vision.transform.ResizeToMultiple(2**cfg.model.param.depth)),
+            deepy.data.transform.ToPairedTransform(
+                torchvision.transforms.ToTensor())
         ]),
         pre_load=cfg.dataset.pre_load,
         download=cfg.dataset.download
@@ -106,7 +108,7 @@ def main(cfg: DictConfig, train_id: str) -> None:
                                    map_location=device))
     net.eval()
     net.to(device)
-    summary(net, (3, 256, 256))
+    summary(net, (1, 3, 256, 256))
 
     result_dir = p / 'result' / train_id
     predict(str(result_dir), loader.dataset, net, device)
