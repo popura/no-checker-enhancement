@@ -1,3 +1,0 @@
-- model=se-itm-net
-- loader.batch_size=64
-- loader.num_workers=10
