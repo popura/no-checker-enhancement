@@ -3,4 +3,4 @@ params:
   milestones:
     - 0.5
     - 0.75
-  ratio: 0.1
+  gamma: 0.1

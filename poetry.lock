@@ -316,7 +316,7 @@ cycler = [
     {file = "cycler-0.10.0.tar.gz", hash = "sha256:cd7b2d1018258d7247a71425e9f26463dfb444d411c39569972f4ce586b0c9d8"},
 ]
 deepy = [
-    {file = "deepy-0.5.0-py3-none-any.whl", hash = "sha256:e2036f38f17d91e48b2c1b471f3ec87ebe6e610a22d511fe13ef369cbb1d7cff"},
+    {file = "deepy-0.5.0-py3-none-any.whl", hash = "sha256:be408aeba9166797d1d993f5c539ae7c6f7e0ad20455efb1b3cd5c736b77a63a"},
 ]
 hydra-core = [
     {file = "hydra-core-1.1.0.tar.gz", hash = "sha256:ef20f54c99d6061e1fffee33f43901eb7a09f23291f6bda56afe1c8f68033b2b"},

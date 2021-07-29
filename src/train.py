@@ -154,7 +154,7 @@ def main(cfg: DictConfig) -> None:
     if device.type == "cuda":
         net = torch.nn.DataParallel(net)
     net = net.to(device)
-    summary(net, input_size=(3, 256, 256))
+    summary(net, input_size=(1, 3, 256, 256))
 
     criterion = nn.L1Loss()
     optimizer = get_optimizer(net.parameters(), cfg)
