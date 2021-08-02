@@ -14,7 +14,7 @@ import kornia.losses
 from omegaconf import OmegaConf, DictConfig
 
 import deepy
-from deepy.data.vision import CaiMEImageDetaset
+from deepy.data.vision import CaiMEImageDataset
 
 import util as myutil
 
@@ -104,7 +104,7 @@ def main(cfg: DictConfig, train_id: str) -> None:
 
     loader = get_data_loader(cfg)
     net = myutil.get_model(cfg)
-    net.load_state_dict(torch.load(str(p / 'history' / train_id / 'trained_model.pth'),
+    net.load_state_dict(torch.load(str(p / 'history' / train_id / f'{cfg.model.name}_best.pth'),
                                    map_location=device))
     net.eval()
     net.to(device)
