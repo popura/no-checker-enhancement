@@ -60,7 +60,7 @@ def predict(path, dataset, net, device):
     to_tensor = torchvision.transforms.ToTensor()
 
     psnr = kornia.losses.PSNRLoss(max_val=1)
-    ssim = kornia.losses.SSIM(window_size=11, reduction='mean')
+    ssim = kornia.losses.SSIMLoss(window_size=11, reduction='mean')
     raw_df = pd.DataFrame(columns=['PSNR', 'SSIM'])
 
     with torch.no_grad():
