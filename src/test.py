@@ -49,19 +49,12 @@ def get_data_loader(cfg: DictConfig):
 
 def predict(path, dataset, net, device):
     p = Path(path)
-    #p.mkdir(parents=True, exist_ok=True)
     (p / 'imgs').mkdir(parents=True, exist_ok=True)
-
-    transforms = deepy.data.transform.Compose([
-        deepy.data.vision.transform.ResizeToMultiple(divisor=16, interpolation=Image.BICUBIC),
-        torchvision.transforms.ToTensor()
-    ])
-    to_pil = torchvision.transforms.ToPILImage()
-    to_tensor = torchvision.transforms.ToTensor()
 
     psnr = kornia.losses.PSNRLoss(max_val=1)
     ssim = kornia.losses.SSIMLoss(window_size=11, reduction='mean')
     raw_df = pd.DataFrame(columns=['PSNR', 'SSIM'])
+    to_pil = torchvision.transforms.ToPIL()
 
     with torch.no_grad():
         for i in range(len(dataset)):
@@ -71,24 +64,19 @@ def predict(path, dataset, net, device):
             print('{:04d}/{:04d}: File Name {}'.format(i, len(dataset), q.name))
 
             sample, target = dataset[i]
-            sample = transforms(sample).unsqueeze(0).to(device)
-            predict = net(sample).to('cpu').clone().detach().squeeze(0)
-            predict = to_pil(torch.clamp(predict, 0, 1))
-            height = target.height
-            width = target.width
-            sample = to_pil(sample.to('cpu').clone().detach().squeeze(0))
-            sample = F.resize(sample, (height, width), Image.BICUBIC)
-            predict = F.resize(predict, (height, width), Image.BICUBIC)
+            sample = sample.unsqueeze(0).to(device)
+            predict = net(sample).to('cpu').clone().detach()
+            sample = sample.to('cpu').clone().detach()
 
-            psnr_loss = psnr(to_tensor(predict).unsqueeze(0), to_tensor(target).unsqueeze(0))
-            ssim_loss = ssim(to_tensor(predict).unsqueeze(0), to_tensor(target).unsqueeze(0))
+            psnr_loss = psnr(predict, target)
+            ssim_loss = ssim(predict, target)
             raw_df = raw_df.append({'PSNR': psnr_loss.item(),
                                     'SSIM': ssim_loss.item()},
                                    ignore_index=True)
             
-            sample.save(str(p / 'imgs' / ('{:04d}'.format(i) + '_' + q.stem + '_input.png')))
-            predict.save(str(p / 'imgs' / ('{:04d}'.format(i) + '_' + q.stem + '_prediction.png')))
-            target.save(str(p / 'imgs' / ('{:04d}'.format(i) + '_' + q.stem + '_target.png')))
+            to_pil(sample.squeeze(0)).save(str(p / 'imgs' / ('{:04d}'.format(i) + '_' + q.stem + '_input.png')))
+            to_pil(predict.squeeze(0)).save(str(p / 'imgs' / ('{:04d}'.format(i) + '_' + q.stem + '_prediction.png')))
+            to_pil(target.squeeze(0)).save(str(p / 'imgs' / ('{:04d}'.format(i) + '_' + q.stem + '_target.png')))
 
     summary_df = pd.DataFrame([raw_df.mean(), raw_df.std()], index=['mean', 'std']) 
     raw_df.to_csv(str(p / 'raw_result.csv'))
